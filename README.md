@@ -6,6 +6,6 @@ The related dataset will be published alongside the article. The dataset contain
 The models were optimised with the following hyperparameters:
 
 | Hyperparameter | WDCNN | SRDCNN | Ince |
-| | :--- | :--- | :--- |
+| :--- | :--- | :--- | :--- |
 | Batch size | 64 | 64 | 32 |
 | | :--- | :--- | :--- |

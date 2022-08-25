@@ -7,7 +7,7 @@ The models were optimised with the following hyperparameters:
 
 | | WDCNN | SRDCNN | Ince |
 | | :--- | :--- | :--- |
-| Batch size | | | |
+| Batch size | 64 | 64 | 32 |
 | | :--- | :--- | :--- |
 | Learning rate| | | |
 | Num epochs | | | |

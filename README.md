@@ -9,8 +9,7 @@ The models were optimised with the following hyperparameters:
 | :---  | :--- | :--- | :--- |
 | Batch size | 64 | 64 | 32 |
 | Learning rate| 0.001 | 0.0001 | 0.001 |
-| Num epochs | | | |
-| Time window length | | | |
-| Time window stride | | | |
-| Early stopping epochs | | | |
-| Patience epochs | | | |
+| Num epochs | 20 | 20 | 20 |
+| Time window length | 2048 | 2048 | 2048 |
+| Time window stride | 32 | 32 | 32 |
+| Early stop patience epochs | 10 | 10 | 10 |

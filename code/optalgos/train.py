@@ -59,7 +59,7 @@ def train(model, train_set, val_set, args, trainlogfile, log_path):
             inputs, labels = inputs.float().to(device), labels.to(device)
 
 
-            out = model.forward(Variable(inputs),verbose= True)
+            out = model.forward(Variable(inputs))
 
 
             loss = criterion(out,labels)

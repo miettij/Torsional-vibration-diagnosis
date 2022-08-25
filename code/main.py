@@ -1,6 +1,5 @@
 from arg_parser import parse_args, save_path_formatter
 
-
 import torch
 import os
 import copy
@@ -17,27 +16,30 @@ if __name__ == '__main__':
         print('All good !')
 
         input_channel_sets=[
-        ['enc1'],
-        ['enc2'],
-        ['enc3'],
-        ['enc4'],
-        ['enc5'],
-        ['enc1','enc2','enc3','enc4','enc5'],
-        ['acc1'],
-        ['acc3'],
-        ['acc4'],
-        ['acc2'],
-        ['acc1', 'acc3', 'acc4'],
-        ['acc1', 'acc2', 'acc3', 'acc4'],
-        ['torque1'],
-        ['torque2'],
-        ['torque1', 'torque2'],
-        ['acc1', 'acc3', 'acc4', 'torque1', 'torque2'],
-        ['acc1', 'acc2', 'acc3', 'acc4', 'torque1', 'torque2'],
-        ['enc1','enc2','enc3','enc4','enc5', 'torque1', 'torque2'],
-        ['acc1', 'acc2', 'acc3', 'acc4', 'enc1','enc2','enc3','enc4','enc5'],
-        ['acc1', 'acc2', 'acc3', 'acc4', 'torque1', 'torque2', 'enc1','enc2','enc3','enc4','enc5']
+        ['acc1'], # Gear housing Accelerometer 1
+        ['acc3'], # Gear housing Accelerometer 2
+        ['acc4'], # Gear housing Accelerometer 3
+        ['acc2'], # Drive shaft Accelerometer 4
+        ['acc1', 'acc3', 'acc4'], # Gear housing accelerometers
+        ['acc1', 'acc2', 'acc3', 'acc4'], # All accelerometers
+        ['torque1'], # Upper torque transducers T1 (drive shaft)
+        ['torque2'], # Lower torque transducers T2 (load shaft)
+        ['torque1', 'torque2'], # T All
+        ['acc1', 'acc3', 'acc4', 'torque1', 'torque2'], # A123 & T all
+        ['acc1', 'acc2', 'acc3', 'acc4', 'torque1', 'torque2'], # A all & T all
+        ['enc1dd'], # E1 - angular acceleration
+        ['enc2dd'], # E2 - angular acceleration
+        ['enc3dd'], # E3 - angular acceleration
+        ['enc4dd'], # E4 - angular acceleration
+        ['enc5dd'], # E5 - angular acceleration
+        ['enc1dd','enc2dd','enc3dd','enc4dd','enc5dd'], # E all
+        ['enc1dd','enc2dd','enc3dd','enc4dd','enc5dd', 'torque1', 'torque2'], # E all & T all
+        ['acc1', 'acc2', 'acc3', 'acc4', 'enc1dd','enc2dd','enc3dd','enc4dd','enc5dd'], # A all & E all
+        ['acc1', 'acc2', 'acc3', 'enc1dd','enc2dd','enc3dd','enc4dd','enc5dd'], # A123 & E all
+        ['acc1', 'acc2', 'acc3', 'acc4', 'torque1', 'torque2', 'enc1dd','enc2dd','enc3dd','enc4dd','enc5dd'], # A all & T all & E all
+        ['acc1', 'acc2', 'acc3', 'torque1', 'torque2', 'enc1dd','enc2dd','enc3dd','enc4dd','enc5dd'] # A123 & T all & E all
         ]
+
         for input_channels in input_channel_sets:
 
             keys = input_channels
@@ -49,7 +51,6 @@ if __name__ == '__main__':
                     input_channel_path += input_channel
                 else:
                     input_channel_path += ','+input_channel
-
 
             from utils import get_filepaths
 
@@ -65,14 +66,15 @@ if __name__ == '__main__':
                 root_dir = '../original/'
             else:
                 root_dir = '../original.tmp/'
+
             all_filepaths = get_filepaths(root_dir)
             """ 'Traditional' <--> split all files according to:
             250RPM-1500RPM, and 0%-50% to train,
             250RPM-1500RPM, and 50%-75% to val
             250RPM-1500RPM, and 75%-100% to test."""
             train_set = Gear_Dataset(all_filepaths, args, datasplit_start = 0, datasplit_stop = 0.5, train_flag = True, input_channels = input_channels)
-            val_set = Gear_Dataset(all_filepaths, args, datasplit_start = 0.5, datasplit_stop = 0.75, train_flag = False, input_channels = input_channels)#tästä overlap pois
-            test_set = Gear_Dataset(all_filepaths, args, datasplit_start = 0.75, datasplit_stop = 1, train_flag = False, input_channels = input_channels)#tästä overlap pois
+            val_set = Gear_Dataset(all_filepaths, args, datasplit_start = 0.5, datasplit_stop = 0.75, train_flag = False, input_channels = input_channels)
+            test_set = Gear_Dataset(all_filepaths, args, datasplit_start = 0.75, datasplit_stop = 1, train_flag = False, input_channels = input_channels)
 
             if args.arch == 'WDCNN':
                 from models.wdcnn import WDCNN

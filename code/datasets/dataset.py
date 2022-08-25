@@ -11,6 +11,12 @@ def get_velocity(Y,t):
     dydx = diff(Y)/diff(t)
     return dydx/360
 
+def get_acceleration(Y,t):
+    """Returns DY/dt, used to compute angular acceleration (Hz/s) from derived
+    encoder signal and time signal."""
+    dydx = diff(Y)/diff(t)
+    return dydx
+
 def get_meta(filepath):
     labeldict = {'no_sim_csv':0,
                 '001_1sim_csv':1,
@@ -32,36 +38,32 @@ def load_data(filepaths, start, stop, debug_flag = False, input_channels = ['acc
     datalist = []
     enc_keys = []
     for i, key in enumerate(input_channels):
-        #print(i, key)
         if 'enc' in key:
 
             enc_keys.append(input_channels[i])
-            #print('popped',i , input_channels[i],'\n')
     input_channels = [x for x in input_channels if x not in enc_keys]
-    # print("Input channels:\n",input_channels)
-    # print("enc keys: ",enc_keys)
     for filepath in filepaths:
-        #print(filepath)
         data = pd.read_csv(filepath, sep = ';')
-        #print(data)
 
         if len(input_channels)>0:
-            acc_and_t_data = data[input_channels][:-1001].to_numpy()
-            #print(acc_and_t_data.shape)
-        #print(data)
+            acc_and_t_data = data[input_channels][:-1002].to_numpy()
         if len(enc_keys) >0:
             enc_arrs = []
             for enc_key in enc_keys:
-                idx = enc_key[-1]
-                #print(idx, enc_key)
+                if 'dd' in enc_key:
+                    idx = enc_key[-3]
+                else:
+                    idx = enc_key[-1]
                 anglekey = 'en'+idx+'angle'
                 timekey = 'en'+idx+'time'
                 velocity = get_velocity(np.abs(data[anglekey][:-1000]),data[timekey][:-1000])
-                enc_arrs.append(velocity)
-                #print(velocity.shape)
+                if 'dd' in enc_key:
+                    acceleration = get_acceleration(velocity, data[timekey][:-1001])
+                    enc_arrs.append(acceleration)
+                else:
+                    enc_arrs.append(velocity)
 
             enc_vels = np.array(enc_arrs).T
-            #print(enc_vels.shape)
 
         if len(input_channels)>0 and len(enc_keys) > 0:
             data = np.hstack((acc_and_t_data, enc_vels))
@@ -69,8 +71,6 @@ def load_data(filepaths, start, stop, debug_flag = False, input_channels = ['acc
             data = acc_and_t_data
         else:
             data = enc_vels
-        #print(data.shape)
-
 
         len_data = data.shape[0]
 
@@ -79,9 +79,7 @@ def load_data(filepaths, start, stop, debug_flag = False, input_channels = ['acc
             stop = 1
         stop_idx = int(len_data*stop)
         data = data[start_idx:stop_idx,:]
-        #print(data)
         label = get_meta(filepath)
-        #print(label)
         datalist.append((data,label))
         if debug_flag:
             print(data.dtype)
@@ -94,14 +92,11 @@ def time_window_division(items, stride, window_len):
     for item in items:
         start = 0
         stop = start+window_len
-        #print(item[0].shape)
         arr_len = item[0].shape[0]
-        #print(arr_len)
         arr = item[0].T
 
         label = item[1]
         while stop < arr_len-window_len:
-            #print(start, stop)
             iterable_items.append((torch.Tensor(arr[:,start:stop]),label))
             start += stride
             stop = start+window_len

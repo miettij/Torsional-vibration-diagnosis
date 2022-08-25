@@ -5,5 +5,12 @@ The related dataset will be published alongside the article. The dataset contain
 
 The models were optimised with the following hyperparameters:
 
-| WDCNN | SRDCNN | Ince |
-| :--- | :--- | :--- |
+| | WDCNN | SRDCNN | Ince |
+| | :--- | :--- | :--- |
+| Batch size | | | |
+| Learning rate| | | |
+| Num epochs | | | |
+| Time window length | | | |
+| Time window stride | | | |
+| Early stopping epochs | | | |
+| Patience epochs | | | |

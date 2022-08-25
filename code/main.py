@@ -88,18 +88,6 @@ if __name__ == '__main__':
                 from models.ince import Ince
                 model = Ince(in_channels = len(input_channels), n_classes = 10, args = args)
 
-            elif args.arch == 'WDCNN_deconv':
-                from models.wdcnn_deconv import WDCNN_deconv
-                model = WDCNN_deconv(in_channels = len(input_channels), n_classes = 10, args = args)
-
-            elif args.arch == 'Ince_deconv':
-                from models.ince_deconv import Ince_deconv
-                model = Ince_deconv(in_channels = len(input_channels), n_classes = 10, args = args)
-
-            elif args.arch == 'SRDCNN_deconv':
-                from models.srdcnn_deconv import SRDCNN_deconv
-                model = SRDCNN_deconv(in_channels = len(input_channels), n_classes = 10, args = args)
-
             trainlogfile = os.path.join(args.log_path,'trainstats.txt')
             f = open(trainlogfile, 'w+')
             f.close()

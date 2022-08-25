@@ -82,16 +82,7 @@ class Ince(nn.Module):
 
         self.fc1 = nn.Linear(400, n_classes)
 
-    #     self.reset_parameters(self.fc1)
-    #     self.reset_parameters(self.fc2)
-    #
-    #
-    # def reset_parameters(self,layer):
-    #     nn.init.kaiming_uniform_(layer.weight, a=math.sqrt(5))
-    #     if layer.bias is not None:
-    #         fan_in, _ = nn.init._calculate_fan_in_and_fan_out(layer.weight)
-    #         bound = 1 / math.sqrt(fan_in)
-    #         nn.init.uniform_(layer.bias, -bound, bound)
+
 
     def forward(self,x,verbose = False):
         out = F.relu(self.layer1(x))

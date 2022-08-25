@@ -62,15 +62,10 @@ class ResBlock(nn.Module):
                                         bias = bias)
 
     def forward(self,x):
-        #tarkista tarvitseeko x kopioida
-        #print("Inside residual layer. input shape: ", x.shape)
         prop = torch.tanh(self.proposal_gate(x))
-        #print("proposals: ", prop.shape)
         contrl = torch.sigmoid(self.control_gate(x))
-        #print("conrtols: ", contrl.shape)
         residual = self.residual_connection(x)
-        #print("residual shape: ", residual.shape)
-        #input gate:
+
         out = prop*contrl
 
         return out+residual
@@ -122,9 +117,6 @@ class SRDCNN(nn.Module):
         self.bn1 = nn.BatchNorm1d(100)
         self.fc2 = nn.Linear(100,n_classes)
         self.bn2 = nn.BatchNorm1d(n_classes)
-        #self.reset_parameters(self.fc1)
-        #self.reset_parameters(self.fc2)
-
 
     def reset_parameters(self,layer):
         nn.init.kaiming_uniform_(layer.weight, a=math.sqrt(5))
@@ -160,39 +152,3 @@ class SRDCNN(nn.Module):
             print("Shape after f2: ",out.shape)
 
         return out
-
-def count_Lout(Lin, padding, kernel_size, stride, dilation = 1):
-
-    Lout = ((Lin+2*padding-dilation*(kernel_size-1))-1)/stride +1
-    print(Lout)
-
-if __name__ == '__main__':
-    tensor = torch.zeros(128, 6, 2048)
-    Lin = tensor.shape[2]
-    print("Lin: ", Lin)
-    print("Input shape: ",tensor.shape)
-    #padding = int(1*(64-1)/2)
-    padding = 0
-    print("padding: ", padding)
-    #kernel_size = 64
-    kernel_size = 1
-    print("kernel size : ", kernel_size)
-    stride = 2
-    print("stride: ", stride)
-    dilation = 1
-    print("dilation: ",dilation)
-
-    count_Lout(Lin = Lin, padding = padding, kernel_size = kernel_size, stride = stride, dilation = dilation)
-
-    # tensor = torch.ones(3,3)
-    # tensor2 = torch.ones(3,3)*2
-    # tensor2[1,:] = 0
-    # tensor2[:,2] = 3
-    # print(tensor)
-    # print(tensor2)
-    # print("\n")
-    # print(tensor*tensor2)
-    model = SRDCNN(6,2048,3)
-    #print(model)
-    out = model.forward(tensor, verbose = True)
-    print("Output shape: ", out.shape)

@@ -13,3 +13,18 @@ The models were optimised with the following hyperparameters:
 | Time window length | 2048 | 2048 | 2048 |
 | Time window stride | 32 | 32 | 32 |
 | Early stop patience epochs | 10 | 10 | 10 |
+
+To reproduce the results:
+
+Load data from: [Dataset will be published with the article]
+
+cd ./code
+python3 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+
+python3 main.py --dataset traditional --arch WDCNN --lr 0.001 --batch-size 64 --epochs 20 --tw-stride 128 --tw-len 2048
+or
+python3 main.py --dataset traditional --arch SRDCNN --lr 0.0001 --batch-size 64 --epochs 20 --tw-stride 128 --tw-len 2048
+or
+python3 main.py --dataset traditional --arch Ince --lr 0.001 --batch-size 32 --epochs 20 --tw-stride 128 --tw-len 2048 --bias False

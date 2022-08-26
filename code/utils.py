@@ -8,6 +8,8 @@ import torch
 
 
 def get_filepaths(root_dir):
+
+
     subdirs = os.listdir(root_dir)
     filepaths = []
     if '.DS_Store' in subdirs:
@@ -20,10 +22,10 @@ def get_filepaths(root_dir):
         for file in files:
             path = os.path.join(root_dir,subdir,file)
             filepaths.append(path)
-
     return filepaths
 
 def get_meta(filepath):
+    
     labeldict = {'no_sim_csv':0,
                 '001_1sim_csv':1,
                 '001_2sim_csv':2,
